@@ -1,0 +1,21 @@
+# WDI - WORLD DEVELOPMENT INDICATORS 
+# BASE DE DADOS DO BANCO MUNDIAL
+# install.packages("WDI")
+library(WDI)
+# SEMPRE PROCUREM AS VIGNETTES
+# BAIXAR DADOS DO PIB
+# TUDO QUE É PRODUZIDO EM UM PAÍS EM DETERMINADO MOMENTO
+
+# GDP (current US$)(NY.GDP.MKTP.CD)
+# GROSS DOMESTIC PRODUCT (GDP) EM DÓLARES NORTE AMERICANOS
+# CÓDIGO GDP NY.GDP.MKTP.CD
+
+COD_GDP <- WDIsearch('gdp')
+# PROCURAR PELO PRÓRPIO SITE DO BANCO MUNDIAL
+# COM O CÓDIGO, BAIXAR OS DADOS
+
+options(scipen = 999)
+basepib <- WDI(country = "all", indicator = "NY.GDP.MKTP.CD")
+
+options(scipen = 999)
+basepib2023 <- WDI(country = "all", indicator = "NY.GDP.MKTP.CD", start = 2023, end = 2023)

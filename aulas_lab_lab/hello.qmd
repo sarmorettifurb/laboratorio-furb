@@ -1,0 +1,171 @@
+---
+title: "Sarah Moretti"
+format: html
+editor: visual
+---
+
+```{r}
+#| label: load-packages # nomes unicos
+#| include: false # nao inclui o resultado no doc
+
+library(tidyverse)
+library(WDI)
+
+birthrateAUTSerieTemporal <- WDI(country = "AUT", 
+                                 indicator = "SP.DYN.CBRT.IN", 
+                                 start = 2000, 
+                                 end = 2022)
+
+birthrateAUTSerieTemporal2 <- WDI(country = "BRA", 
+                                 indicator = "SP.DYN.CBRT.IN", 
+                                 start = 2000, 
+                                 end = 2022)
+
+options(scipen = 999)
+birthrateDadosEmPainel <- WDI(country = c("BRA", "AUT", "USA", "ARG", "GBR", "ZAF", "MOZ", "DZA"), 
+                              indicator = "SP.DYN.CBRT.IN", 
+                              start = "2000", 
+                              end = "2022")
+
+options(scipen = 999)
+
+birthrateCorteTransversal <- WDI(
+  country = c("BRA", "AUT", "USA", "ARG", "GBR", "ZAF", "MOZ", "DZA"),
+  indicator = 'SP.DYN.CBRT.IN', 
+  start = 2021, 
+  end = 2021
+)
+
+```
+
+## Taxa Bruta de Natalidade
+
+### **Definição e Metodologia da Taxa Bruta de Natalidade**
+
+A **taxa bruta de natalidade** é um indicador demográfico que expressa o número de nascimentos vivos registrados ao longo de um ano, por grupo de **1.000 habitantes**, com base na estimativa da população no meio do ano.
+
+Sua fórmula consiste na divisão do número total de nascimentos pelo tamanho médio da população durante o período de referência, geralmente um ano. Por exemplo, uma taxa de 9,5 por 1.000 habitantes em uma população de 1 milhão implica aproximadamente **9.500 nascimentos anuais**.
+
+A subtração da **taxa bruta de mortalidade** da taxa bruta de natalidade fornece a **taxa de crescimento natural da população**, que representa a variação populacional desconsiderando efeitos migratórios.
+
+As taxas vitais são estimadas com base em registros civis de nascimentos e óbitos, censos populacionais, pesquisas amostrais conduzidas por institutos nacionais de estatística e outras organizações internacionais. Para alguns países de alta renda, os dados mais recentes são estimativas provisórias derivadas de registros vitais; para outros, são projeções da **Divisão de População das Nações Unidas**.
+
+## Gráfico Séreie Temporal Austria
+
+Os gráficos de série temporal são utilizados para representar a evolução de uma variável ao longo de um determinado período de tempo em um determinado local. Neste caso, foi utilizada a variável **Taxa Bruta de Natalidade** na **Áustria**, no período de **2000 a 2022**, totalizando 22 anos. O gráfico permite observar a **evolução do indicador demográfico** ao longo do tempo, evidenciando possíveis tendências e flutuações no comportamento da taxa durante o período analisado.
+
+```{r}
+#| label: serietemporal 
+#| warning: false 
+#| echo: false  
+
+ggplot(birthrateAUTSerieTemporal,
+                            aes(x = year, y = SP.DYN.CBRT.IN)) +
+  geom_line(color = "steelblue", size = 1) +
+  geom_point(color = "darkred", size = 2.5) +
+  geom_text(aes(label = round(SP.DYN.CBRT.IN, 1)),
+            vjust = -0.7, size = 3, color = "black") +
+  scale_x_continuous(breaks = birthrateAUTSerieTemporal$year) +  # mostra todos os anos
+  labs(
+    title = "Evolução da Taxa Bruta de Natalidade na Áustria (2000-2022)",
+    subtitle = "Indicador: SP.DYN.CBRT.IN (nascimentos por 1.000 habitantes)",
+    x = "Ano",
+    y = "Taxa de Natalidade"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+```
+
+## Gráfico Séreie Temporal Brasil
+
+Neste outro caso, foi utilizada a variável **Taxa Bruta de Natalidade** no **Brasil**, no período de **2000 a 2022**, totalizando 22 anos. O gráfico permite observar a **evolução do indicador demográfico** ao longo do tempo, evidenciando possíveis tendências e flutuações no comportamento da taxa durante o período analisado.
+
+```{r}
+#| label: serietemporal2
+#| warning: false 
+#| echo: false  
+
+ggplot(birthrateAUTSerieTemporal2,
+                            aes(x = year, y = SP.DYN.CBRT.IN)) +
+  geom_line(color = "steelblue", size = 1) +
+  geom_point(color = "darkred", size = 2.5) +
+  geom_text(aes(label = round(SP.DYN.CBRT.IN, 1)),
+            vjust = -0.7, size = 3, color = "black") +
+  scale_x_continuous(breaks = birthrateAUTSerieTemporal$year) +  # mostra todos os anos
+  labs(
+    title = "Evolução da Taxa Bruta de Natalidade no Brasil (2000-2022)",
+    subtitle = "Indicador: SP.DYN.CBRT.IN (nascimentos por 1.000 habitantes)",
+    x = "Ano",
+    y = "Taxa de Natalidade"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(size = 11),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+```
+
+## 
+
+## Gráfico Dados Em Painel
+
+Os gráficos com **dados em painel** são utilizados para analisar a evolução de uma variável ao longo de um determinado período de tempo em **múltiplas unidades geográficas**, possibilitando a comparação entre elas. Neste caso, o gráfico apresenta a variável **Taxa Bruta de Natalidade** no período de **2000 a 2022**, abrangendo os seguintes países: **Argentina, Áustria, Brasil, Estados Unidos da América, Moçambique, Reino Unido, Argélia e África do Sul**. A representação permite observar e comparar as variações do indicador entre os diferentes países ao longo dos 22 anos analisados.
+
+```{r}
+#| label: dadosempainel
+#| warning: false
+#| echo: false
+
+ggplot(birthrateDadosEmPainel,
+                     aes(x = year, y = SP.DYN.CBRT.IN, color = country, group = country)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  labs(
+    title = "Taxa Bruta de Natalidade (2000-2022)",
+    x = "Ano",
+    y = "Nascimentos por 1.000 habitantes",
+    color = "País"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+```
+
+## Gráfico Corte Transversal
+
+O **gráfico de corte transversal** apresenta os dados de uma variável em um **único período de tempo** (neste caso, um ano específico), considerando **múltiplas unidades geográficas**. Nesta instância, o gráfico exibe a **Taxa Bruta de Natalidade** no ano de **2021**, abrangendo os seguintes países: **Argentina, Áustria, Brasil, Estados Unidos da América, Moçambique, Reino Unido, Argélia e África do Sul**. Essa representação permite a **comparação direta** dos valores do indicador entre os países selecionados no mesmo ponto temporal.
+
+```{r}
+#| label: cortetransversal
+#| warning: false
+#| echo: false
+
+ggplot(birthrateCorteTransversal,
+                                      aes(x = reorder(country, SP.DYN.CBRT.IN),
+                                          y = SP.DYN.CBRT.IN)) +
+  geom_col(fill = "steelblue") +
+  geom_text(aes(label = round(SP.DYN.CBRT.IN, 1)),
+            vjust = -0.3, size = 3.5) +
+  labs(
+    title = "Taxa Bruta de Natalidade por País (2021)",
+    x = "País",
+    y = "Nascimentos por 1.000 habitantes"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+
+
+```

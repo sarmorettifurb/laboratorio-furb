@@ -1,0 +1,97 @@
+---
+title: "Exportações de Bens - Santa Catarina"
+format: html
+execute:
+  freeze: auto
+---
+
+```{r}
+#| label: dados
+#| message: true
+#| include: false
+
+library(GetBCBData)
+library(tidyverse)
+library(scales)
+library(gganimate)
+library(gifski)
+library(lubridate)
+
+# Buscar dados da série 13081 (Exportações de Bens - Santa Catarina)
+serie <- gbcbd_get_series(
+  id = 13081,
+  first.date = "2000-01-01",
+  last.date = Sys.Date(),
+  be.quiet = TRUE
+)
+
+head(serie)
+
+```
+
+## Sobre a Variavel:
+
+A variável **13081** do Sistema de Gestão de Séries Temporais (SGS) refere-se às **Exportações de Bens de Santa Catarina**. Este indicador fornece dados mensais sobre o valor das exportações de mercadorias realizadas pelo estado de Santa Catarina, sendo uma importante ferramenta para análise do comércio exterior da região.
+
+**📈 Dados Recentes**
+
+Em 2024, as exportações de Santa Catarina atingiram US\$ 11,6 bilhões, representando um crescimento de 0,6% em relação a 2023. Os principais produtos exportados foram:
+
+-   **Carnes de aves**: US\$ 1,9 bilhão
+
+-   **Carnes suínas**: US\$ 1,6 bilhão
+
+-   **Motores e geradores elétricos**: US\$ 673 milhões
+
+-   **Soja**: US\$ 633 milhões
+
+-   **Peças para motores de veículos**: US\$ 495 milhões
+
+Os principais destinos das exportações catarinenses foram os Estados Unidos, China, México, Argentina e Japão.
+
+Se desejar, posso auxiliá-lo na análise dos dados ou na criação de gráficos e relatórios utilizando ferramentas como R ou Quarto.
+
+```{r}
+#| label: grafico
+#| message: false
+#| warning: false
+#| echo: false  
+
+# Criar o gráfico animado
+grafico <- ggplot(serie, aes(x = ref.date, y = value)) +
+  geom_area(
+    fill = "#56B4E9", alpha = 0.4,
+    stat = "identity"
+  ) +
+  geom_line(
+    color = "#0072B2", linewidth = 1.5,
+    stat = "identity"
+  ) +
+  geom_point(
+    color = "#D55E00", size = 1.8,
+    stat = "identity"
+  ) +
+  labs(
+    title = "🚢 Exportações de Bens - Santa Catarina",
+    subtitle = "Ano: {frame_along}",
+    x = "Ano",
+    y = "Exportações (US$ Milhões)",
+    caption = "Fonte: Banco Central do Brasil - Dados via GetBCBData"
+  ) +
+  theme_minimal(base_size = 16) +
+  theme(
+    plot.title = element_text(face = "bold", color = "#222222", size = 18),
+    plot.subtitle = element_text(color = "#444444", size = 14),
+    plot.caption = element_text(size = 10, color = "#666666"),
+    axis.title = element_text(face = "bold"),
+    panel.grid.minor = element_blank()
+  ) +
+  scale_y_continuous(labels = comma) +
+  scale_x_date(date_labels = "%Y", date_breaks = "5 years") +
+  transition_reveal(along = ref.date)
+
+grafico
+
+```
+
+O gráfico mostra que as exportações de bens de Santa Catarina apresentaram um crescimento consistente desde o ano 2000, passando de aproximadamente 200 milhões de dólares para mais de 1 bilhão de dólares mensais nos últimos anos. É possível perceber uma forte sazonalidade, com variações regulares entre meses de maior e menor volume exportado, o que reflete características do ciclo produtivo e da demanda internacional. Alguns períodos de queda são visíveis, especialmente durante a crise financeira global de 2008 e a pandemia de 2020, que impactaram temporariamente as exportações, embora a recuperação tenha sido rápida em ambos os casos. A partir de 2022, observa-se que os valores exportados atingiram níveis recordes, impulsionados principalmente por um cenário de câmbio favorável, alta nos preços de commodities e aumento da demanda externa. Os dados mais recentes, de 2025, mostram que as exportações seguem em patamares historicamente elevados, consolidando uma trajetória de expansão no longo prazo para o comércio exterior catarinense.
